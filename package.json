@@ -1,5 +1,5 @@
 {
-  "name": "node-couchbase-repository",
+  "name": "couchbase-repository",
   "version": "1.0.0",
   "description": "Repository generator for couchbase.",
   "main": "lib/index.js",
@@ -8,7 +8,8 @@
     "test": "mocha --compilers js:babel-register",
     "lint": "eslint src/**/*.js test/**/*.js"
   },
-  "keywords": [],
+  "files": ["lib"],
+  "keywords": ["couchbase", "repository"],
   "author": "aruberto",
   "license": "MIT",
   "repository": {

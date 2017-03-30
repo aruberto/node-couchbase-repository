@@ -1,51 +1,50 @@
-#realtor
+#node-couchbase-repository
 
-This project serves realtor person and company data
+Create a repository for model backed by couchbase bucket. Based on spring data repository pattern.
 
 ##Requirements
-* node __^7.0.0__
-* npm __^3.0.0__
+* node __^7.6.0__
 
 ##Installation
 ```
-git clone git@gitsub.solidifi.com:rmtech-title/realtor.git
-npm install
-```
-
-##Features
-* [koa2](https://github.com/koajs/koa)
-* [koa-router](https://github.com/alexmingoia/koa-router)
-* [koa-bodyparser](https://github.com/koajs/bodyparser)
-* [koa-logger](https://github.com/koajs/logger)
-* [couchbase-promises](https://github.com/dsfields/couchbase-promises/blob/master/README.md)
-* [yup](https://github.com/jquense/yup/blob/master/README.md)
-* [Nodemon](http://nodemon.io/)
-* [Mocha](https://mochajs.org/)
-* [Babel](https://github.com/babel/babel)
-* [ESLint](http://eslint.org/)
-
-##Structure
-```
-├── bin
-│   └── server.js                  # Bootstrapping and entry point
-├── config
-│   ├── env
-│   │   ├── <environment name>.js  # Environment specific config
-│   ├── index.js                   # Server configuration settings - exports config according to envionrment and commons
-├── src
-│   ├── routes
-│   │   ├── <route name>.js        # Domain specific routes
-│   │   └── index.js               # App routes
-│   ├── repository
-│   │   └── <repository name>.js   # Domain data repositories
-└── test                           # Unit tests
+npm install --save couchbase couchbase-repository
 ```
 
 ##Usage
-* `npm start` Start server on live mode
-* `npm run dev` Start server on dev mode with nodemon
-* `npm test` Run mocha tests
-* `npm run lint` Run eslint checks
+```
+import couchbase from 'couchbase';
+import createCouchbaseRepository from 'couchbase-repository';
+import yup from 'yup';
+
+const cluster = new couchbase.Cluster(<insert url here ...>);
+
+// use yup or any other object validation framework you want
+const personSchema =
+  yup.object().shape({
+    name: yup.string().required(),
+    email: yup.string().email().required()
+  });
+
+const personRepository = createRepository({
+  cluster,
+  bucketName: 'my-bucket',
+  type: 'people',
+  async validate (input) { // expecting validate function to return a promise
+    return personSchema.validate(input);
+  }
+});
+
+async function doWork() {
+  const newPerson = await personRepository.save({ name: 'Joe Blow', email: 'jblow@blah.com' });
+
+  console.log(newPerson.id); // will print a uuid
+
+  const existingPerson = await personRepository.findOne('1231-1213-11-1231');
+
+  await personRepository.del('1231-123-123-1312');
+}
+
+```
 
 ##License
 MIT

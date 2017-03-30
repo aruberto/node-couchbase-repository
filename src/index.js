@@ -3,7 +3,7 @@ import uuid from 'uuid/v4';
 import _ from 'lodash';
 import Promise from 'bluebird';
 
-export default function createRepository ({
+export default function createCouchbaseRepository ({
   cluster,
   bucketName = 'default',
   bucketArgs = [],
