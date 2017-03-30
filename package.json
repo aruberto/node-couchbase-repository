@@ -1,0 +1,45 @@
+{
+  "name": "node-couchbase-repository",
+  "version": "1.0.0",
+  "description": "Repository generator for couchbase.",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "test": "mocha --compilers js:babel-register",
+    "lint": "eslint src/**/*.js test/**/*.js"
+  },
+  "keywords": [],
+  "author": "aruberto",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aruberto/node-couchbase-repository.git"
+  },
+  "engines": {
+    "node": ">=7.6.0"
+  },
+  "peerDependencies": {
+    "couchbase": "^2.3.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "lodash": "^4.17.4",
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.24.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-register": "^6.24.0",
+    "chai": "^3.5.0",
+    "couchbase": "^2.3.0",
+    "eslint": "^3.18.0",
+    "eslint-config-semistandard": "^8.0.0",
+    "eslint-config-standard": "^7.1.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^2.1.1",
+    "mocha": "^3.2.0",
+    "sinon": "^2.1.0",
+    "yup": "^0.21.3"
+  }
+}
