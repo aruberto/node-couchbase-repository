@@ -1,16 +1,16 @@
-#node-couchbase-repository
+# node-couchbase-repository
 
 Create a repository for model backed by couchbase bucket. Based on spring data repository pattern.
 
-##Requirements
+## Requirements
 * node __^7.6.0__
 
-##Installation
+## Installation
 ```
 npm install --save couchbase couchbase-repository
 ```
 
-##Usage
+## Usage
 ```
 import couchbase from 'couchbase';
 import createCouchbaseRepository from 'couchbase-repository';
@@ -46,5 +46,5 @@ async function doWork() {
 
 ```
 
-##License
+## License
 MIT
