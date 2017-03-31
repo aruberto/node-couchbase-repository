@@ -49,7 +49,7 @@ describe('Couchbase Repository', () => {
       queryStub.withArgs(
         sinon.match((value) => countRegex.test(value.options.statement)),
         sinon.match.object
-      ).returns([[{ count: 0 }]]);
+      ).returns([{ count: 0 }]);
       queryStub.withArgs(
         sinon.match((value) => selectRegex.test(value.options.statement)),
         sinon.match.object
@@ -72,7 +72,7 @@ describe('Couchbase Repository', () => {
       queryStub.withArgs(
         sinon.match((value) => countRegex.test(value.options.statement)),
         sinon.match.object
-      ).returns([[{ count: 11 }]]);
+      ).returns([{ count: 11 }]);
       queryStub.withArgs(
         sinon.match((value) => selectRegex.test(value.options.statement)),
         sinon.match.object

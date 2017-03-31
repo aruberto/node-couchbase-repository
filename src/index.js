@@ -51,11 +51,11 @@ export default function createCouchbaseRepository ({
 
       return {
         items: dataResult[0],
-        total: countResult[0][0].count,
+        total: countResult[0].count,
         page: {
           number: limit <= 0 ? 0 : Math.floor(offset / limit),
           size: limit,
-          total: limit <= 0 ? 0 : Math.floor((countResult[0][0].count + limit - 1) / limit)
+          total: limit <= 0 ? 0 : Math.floor((countResult[0].count + limit - 1) / limit)
         },
         sort: sortFiltered,
         filters
