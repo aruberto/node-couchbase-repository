@@ -1,6 +1,6 @@
 {
   "name": "couchbase-repository",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Repository generator for couchbase.",
   "main": "lib/index.js",
   "scripts": {

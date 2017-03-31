@@ -53,7 +53,7 @@ describe('Couchbase Repository', () => {
       queryStub.withArgs(
         sinon.match((value) => selectRegex.test(value.options.statement)),
         sinon.match.object
-      ).returns([[]]);
+      ).returns([]);
 
       const results = await testRepository.findAll();
 
@@ -76,7 +76,7 @@ describe('Couchbase Repository', () => {
       queryStub.withArgs(
         sinon.match((value) => selectRegex.test(value.options.statement)),
         sinon.match.object
-      ).returns([[]]);
+      ).returns([]);
 
       const results = await testRepository.findAll({
         page: {

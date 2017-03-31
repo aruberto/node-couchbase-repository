@@ -50,7 +50,7 @@ export default function createCouchbaseRepository ({
       ]);
 
       return {
-        items: dataResult[0],
+        items: dataResult,
         total: countResult[0].count,
         page: {
           number: limit <= 0 ? 0 : Math.floor(offset / limit),
