@@ -16,7 +16,9 @@ import couchbase from 'couchbase';
 import createCouchbaseRepository from 'couchbase-repository';
 import yup from 'yup';
 
+const bucketName = 'my-bucket';
 const cluster = new couchbase.Cluster(<insert url here ...>);
+const bucket = cluster.openBucket(bucketName);
 
 // use yup or any other object validation framework you want
 const personSchema =
@@ -26,8 +28,8 @@ const personSchema =
   });
 
 const personRepository = createRepository({
-  cluster,
-  bucketName: 'my-bucket',
+  bucket,
+  bucketName,
   type: 'people',
   async validate (input) { // expecting validate function to return a promise
     return personSchema.validate(input);

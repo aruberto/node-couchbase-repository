@@ -8,7 +8,9 @@ import yup from 'yup';
 
 import createRepository from '../src';
 
+const bucketName = 'test';
 const cluster = new couchbase.Mock.Cluster();
+const bucket = cluster.openBucket(bucketName);
 
 const schema =
   yup.object().shape({
@@ -19,9 +21,8 @@ const schema =
   });
 
 const testRepository = createRepository({
-  cluster,
-  bucketName: 'testBucket',
-  bucketArgs: ['password', () => {}],
+  bucket,
+  bucketName,
   type: 'test',
   typeField: '_type',
   async validate (input) {
@@ -29,17 +30,28 @@ const testRepository = createRepository({
   }
 });
 
+const countRegex = /^SELECT count\(\*\)/i;
+const selectRegex = new RegExp('^SELECT `' + bucketName + '`\\.\\*', 'i');
+
 describe('Couchbase Repository', () => {
+  let queryStub;
+
+  before(() => {
+    queryStub = sinon.stub(testRepository, 'query');
+  });
+
+  afterEach(() => {
+    queryStub.restore();
+  });
+
   describe('findAll', () => {
     it('returns nothing', async () => {
-      const queryStub = sinon.stub(testRepository, 'query');
-
       queryStub.withArgs(
-        sinon.match((value) => /^SELECT count\(\*\)/i.test(value.options.statement)),
+        sinon.match((value) => countRegex.test(value.options.statement)),
         sinon.match.object
       ).returns([[{ count: 0 }]]);
       queryStub.withArgs(
-        sinon.match((value) => /^SELECT \*/i.test(value.options.statement)),
+        sinon.match((value) => selectRegex.test(value.options.statement)),
         sinon.match.object
       ).returns([[]]);
 
@@ -52,19 +64,17 @@ describe('Couchbase Repository', () => {
       expect(results.page.total).to.equal(0);
       expect(results.sort).to.be.empty;
       expect(results.filters).to.deep.equal({});
-
-      queryStub.restore();
     });
 
     it('process params', async () => {
       const queryStub = sinon.stub(testRepository, 'query');
 
       queryStub.withArgs(
-        sinon.match((value) => /^SELECT count\(\*\)/i.test(value.options.statement)),
+        sinon.match((value) => countRegex.test(value.options.statement)),
         sinon.match.object
       ).returns([[{ count: 11 }]]);
       queryStub.withArgs(
-        sinon.match((value) => /^SELECT \*/i.test(value.options.statement)),
+        sinon.match((value) => selectRegex.test(value.options.statement)),
         sinon.match.object
       ).returns([[]]);
 

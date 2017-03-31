@@ -4,24 +4,18 @@ import _ from 'lodash';
 import Promise from 'bluebird';
 
 export default function createCouchbaseRepository ({
-  cluster,
+  bucket,
   bucketName = 'default',
-  bucketArgs = [],
   type,
   typeField = 'type',
   validate = async (input) => Promise.resolve(input)
 }) {
-  const bucket = cluster.openBucket(bucketName, ...bucketArgs);
   const queryAsync = Promise.promisify(bucket.query, { context: bucket });
   const getAsync = Promise.promisify(bucket.get, { context: bucket });
   const upsertAsync = Promise.promisify(bucket.upsert, { context: bucket });
   const removeAsync = Promise.promisify(bucket.remove, { context: bucket });
 
   return {
-    get bucket () {
-      return bucket;
-    },
-
     async query (...args) {
       return queryAsync(...args);
     },
@@ -45,7 +39,7 @@ export default function createCouchbaseRepository ({
 
       const countQuery = couchbase.N1qlQuery.fromString(`SELECT count(*) AS count ${baseQueryStr}`);
       const dataQuery = couchbase.N1qlQuery.fromString(
-        `SELECT * ${baseQueryStr}` +
+        `SELECT \`${bucketName}\`.* ${baseQueryStr}` +
         (orderBy ? ` ORDER BY ${orderBy}` : '') +
         ' OFFSET $offset LIMIT $limit'
       );
@@ -56,7 +50,7 @@ export default function createCouchbaseRepository ({
       ]);
 
       return {
-        items: dataResult[0].map(x => x[bucketName]),
+        items: dataResult[0],
         total: countResult[0][0].count,
         page: {
           number: limit <= 0 ? 0 : Math.floor(offset / limit),
