@@ -7,7 +7,7 @@ export default function createCouchbaseRepository ({
   bucket,
   bucketName = 'default',
   type,
-  typeField = 'type',
+  typeField = 'cbType',
   validate = async (input) => Promise.resolve(input)
 }) {
   const queryAsync = Promise.promisify(bucket.query, { context: bucket });
