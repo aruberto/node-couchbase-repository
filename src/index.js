@@ -12,7 +12,8 @@ export default function createCouchbaseRepository ({
 }) {
   const queryAsync = Promise.promisify(bucket.query, { context: bucket });
   const getAsync = Promise.promisify(bucket.get, { context: bucket });
-  const upsertAsync = Promise.promisify(bucket.upsert, { context: bucket });
+  const insertAsync = Promise.promisify(bucket.insert, { context: bucket });
+  const replaceAsync = Promise.promisify(bucket.replace, { context: bucket });
   const removeAsync = Promise.promisify(bucket.remove, { context: bucket });
 
   return {
@@ -69,14 +70,13 @@ export default function createCouchbaseRepository ({
     },
 
     async save (input) {
-      const id = input.id ? input.id : uuid();
-      const value = await validate({
-        ...input,
-        id,
-        [typeField]: type
-      });
+      const { id, operation } =
+        input.id
+        ? { id: input.id, operation: replaceAsync }
+        : { id: uuid(), operation: insertAsync };
+      const value = await validate({ ...input, id, [typeField]: type });
 
-      await upsertAsync(`${type}::${value.id}`, value);
+      await operation(`${type}::${value.id}`, value);
 
       return value;
     },

@@ -169,6 +169,20 @@ describe('Couchbase Repository', () => {
       expect(record.name).to.equal('Joe Blow');
       expect(record.email).to.equal('jblow@blah.com');
     });
+
+    it('should throw not found error when id does not exist', async () => {
+      try {
+        await testRepository.save({
+          id: '123-abc',
+          name: 'Joe Blow',
+          email: 'jblow@blah.com'
+        });
+
+        throw new Error('id exists');
+      } catch (err) {
+        expect(err.code).to.equal(couchbase.errors.keyNotFound);
+      }
+    });
   });
 
   describe('del', () => {
