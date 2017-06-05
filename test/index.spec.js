@@ -8,9 +8,8 @@ import yup from 'yup';
 
 import createRepository from '../src';
 
-const bucketName = 'test';
 const cluster = new couchbase.Mock.Cluster();
-const bucket = cluster.openBucket(bucketName);
+const bucket = cluster.openBucket();
 
 const schema =
   yup.object().shape({
@@ -22,7 +21,6 @@ const schema =
 
 const testRepository = createRepository({
   bucket,
-  bucketName,
   type: 'test',
   typeField: '_type',
   async validate (input) {
@@ -31,7 +29,7 @@ const testRepository = createRepository({
 });
 
 const countRegex = /^SELECT count\(\*\)/i;
-const selectRegex = new RegExp('^SELECT `' + bucketName + '`\\.\\*', 'i');
+const selectRegex = new RegExp('^SELECT `default`\\.\\*', 'i');
 
 describe('Couchbase Repository', () => {
   let queryStub;
@@ -41,6 +39,10 @@ describe('Couchbase Repository', () => {
   });
 
   afterEach(() => {
+    queryStub.reset();
+  });
+
+  after(() => {
     queryStub.restore();
   });
 
@@ -67,8 +69,6 @@ describe('Couchbase Repository', () => {
     });
 
     it('process params', async () => {
-      const queryStub = sinon.stub(testRepository, 'query');
-
       queryStub.withArgs(
         sinon.match((value) => countRegex.test(value.options.statement)),
         sinon.match.object
@@ -76,7 +76,7 @@ describe('Couchbase Repository', () => {
       queryStub.withArgs(
         sinon.match((value) => selectRegex.test(value.options.statement)),
         sinon.match.object
-      ).returns([]);
+      ).returns([{ id: '111' }, { id: '222' }]);
 
       const results = await testRepository.findAll({
         page: {
@@ -88,7 +88,7 @@ describe('Couchbase Repository', () => {
         name: 'jj'
       });
 
-      expect(results.items).to.be.empty;
+      expect(results.items).to.deep.equal([{ id: '111' }, { id: '222' }]);
       expect(results.total).to.equal(11);
       expect(results.page.number).to.equal(1);
       expect(results.page.size).to.equal(2);

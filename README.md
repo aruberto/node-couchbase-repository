@@ -16,9 +16,8 @@ import couchbase from 'couchbase';
 import createCouchbaseRepository from 'couchbase-repository';
 import yup from 'yup';
 
-const bucketName = 'my-bucket';
 const cluster = new couchbase.Cluster(<insert url here ...>);
-const bucket = cluster.openBucket(bucketName);
+const bucket = cluster.openBucket('my-bucket');
 
 // use yup or any other object validation framework you want
 const personSchema =
@@ -27,9 +26,8 @@ const personSchema =
     email: yup.string().email().required()
   });
 
-const personRepository = createRepository({
+const personRepository = createCouchbaseRepository({
   bucket,
-  bucketName,
   type: 'people',
   async validate (input) { // expecting validate function to return a promise
     return personSchema.validate(input);
@@ -45,7 +43,6 @@ async function doWork() {
 
   await personRepository.del('1231-123-123-1312');
 }
-
 ```
 
 ## License

@@ -5,7 +5,6 @@ import Promise from 'bluebird';
 
 export default function createCouchbaseRepository ({
   bucket,
-  bucketName = 'default',
   type,
   typeField = 'cbType',
   validate = async (input) => Promise.resolve(input)
@@ -15,6 +14,7 @@ export default function createCouchbaseRepository ({
   const insertAsync = Promise.promisify(bucket.insert, { context: bucket });
   const replaceAsync = Promise.promisify(bucket.replace, { context: bucket });
   const removeAsync = Promise.promisify(bucket.remove, { context: bucket });
+  const bucketName = bucket._name || 'default'; // only shortcut available to get bucket name ...
 
   return {
     async query (...args) {

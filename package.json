@@ -1,12 +1,13 @@
 {
   "name": "couchbase-repository",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Repository generator for couchbase.",
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src --out-dir lib",
     "test": "mocha --compilers js:babel-register",
-    "lint": "eslint src/**/*.js test/**/*.js"
+    "lint": "eslint src/**/*.js test/**/*.js",
+    "prepublish": "npm run build"
   },
   "files": [
     "lib"
@@ -37,17 +38,17 @@
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-register": "^6.24.1",
-    "chai": "^3.5.0",
-    "couchbase": "^2.3.2",
+    "chai": "^4.0.1",
+    "couchbase": "^2.3.3",
     "eslint": "^3.19.0",
     "eslint-config-semistandard": "^11.0.0",
     "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "mocha": "^3.3.0",
-    "sinon": "^2.1.0",
+    "mocha": "^3.4.2",
+    "sinon": "^2.3.2",
     "yup": "^0.21.3"
   }
 }
